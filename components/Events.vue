@@ -8,7 +8,7 @@ const props = defineProps({
 const selectedDate = ref(null);
 const selectedType = ref(null);
 const daysInRussian = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-const monthsInRussian = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const monthsInRussian = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
 const allTypes = computed(() => {
     const types = [...new Set(props.events.map(event => event.type))];
@@ -21,8 +21,9 @@ const allTypes = computed(() => {
 // диапазон дней события
 const allDays = computed(() => {
     let days = [];
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    let firstDayOfMonth = null;
+    const today = new Date(); // текущая дата
+    today.setHours(0, 0, 0, 0); // сбрасываем текущую дату в часах до 00:00
 
     props.events.forEach(event => {
         const startDate = new Date(event.start_date);
@@ -31,20 +32,22 @@ const allDays = computed(() => {
         while (startDate <= endDate) {
             if (startDate >= today) {
                 // Добавляем только те даты, которые находятся в диапазоне от сегодняшнего дня и дальше
-                // const dayNumber = startDate.getDay();
                 const dayName = daysInRussian[startDate.getDay()];
                 const monthName = monthsInRussian[startDate.getMonth()]; // Получение названия месяца
-                // Проверяем, является ли день первым числом месяца
-                const isFirstDayOfMonth = startDate.getDate() ===  1;
+
+                // Проверяем, является ли текущая дата первым днем месяца
+                if (firstDayOfMonth === null || firstDayOfMonth.getMonth() !== startDate.getMonth()) {
+                    firstDayOfMonth = new Date(startDate);
+                }
 
                 days.push({
                     date: startDate.toISOString().split('T')[0],
                     number: startDate.getDate(),
                     name: dayName,
-                    month: isFirstDayOfMonth ? monthName : null
+                    month: firstDayOfMonth.getDate() === startDate.getDate() ? monthName : null // Добавляем название месяца только для первых дней месяца
                 });
-
             }
+
             startDate.setDate(startDate.getDate() + 1);
         }
     });
@@ -101,7 +104,7 @@ onMounted(() => {
         </button>
 
         <div v-for="day in allDays" :key="day.date" @click="filterByDate(day.date)">
-            {{ day.number }} {{ day.name }} {{ day.month }}
+            {{ day.number }} {{ day.name }} {{ day.month ? day.month : '' }}
         </div>
 
         <div class="events">
