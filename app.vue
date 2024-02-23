@@ -1,5 +1,5 @@
 <script setup>
-const { data: events } = await useFetch('https://run.mocky.io/v3/cd5e7814-efd2-47fa-89fa-e172db046f30');
+const { data: events } = await useFetch('https://run.mocky.io/v3/f8255df2-70e5-449c-a58e-eb041c899e17');
 </script>
 
 <template>
@@ -13,7 +13,7 @@ const { data: events } = await useFetch('https://run.mocky.io/v3/cd5e7814-efd2-4
     </header>
 
     <main class="main container">
-        <Events :data="events" />
+        <Events :events="events" />
     </main>
 
     <footer class="footer">

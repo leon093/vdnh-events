@@ -1,17 +1,38 @@
 <script setup>
-defineProps({
-    data: Array
+import { computed, ref } from 'vue';
+
+const props = defineProps({
+    events: Array
 })
+
+const filter = ref('All');
+const types = computed(() => [...new Set(props.events.map(event => event.type))]);
+
+const filteredEvents = computed(() => {
+    if (filter.value === 'All') {
+        return props.events;
+    } else {
+        return props.events.filter(event => event.type === filter.value);
+    }
+});
+
+const setFilter = (type) => filter.value = type;
 </script>
 
 <template>
     <section class="events-block">
         <h2 class="title">Афиша событий на</h2>
 
-        <div v-if="data?.length" class="events">
-            <Event :data="event" v-for="event in data" />
+        <button @click="setFilter('All')" :class="{ active: filter === 'All' }">
+            Все
+        </button>
+        <button v-for="(type, i) in types" :key="i" @click="setFilter(type)" :class="{ active: filter === type }">
+            {{ type }}
+        </button>
+
+        <div  class="events">
+            <Event :data="event" v-for="event in filteredEvents" :key="event.id" />
         </div>
-        <p v-else class="not-found">Новых событий пока нет</p>
     </section>
 </template>
 
@@ -35,4 +56,7 @@ defineProps({
 .event {
     flex: 0 1 23%;
 }
+
+
+
 </style>
