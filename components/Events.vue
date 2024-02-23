@@ -86,6 +86,16 @@ const filterByType = (type) => {
     selectedType.value = type;
 };
 
+const isEventActive = computed(() => {
+    const now = new Date();
+    return props.events.some(event => {
+        const startDate = new Date(event.start_date);
+        const endDate = new Date(event.end_date);
+        return now >= startDate && now <= endDate;
+    });
+});
+
+
 
 // При монтировании компонента устанавливаем выбранную дату на текущий день
 onMounted(() => {
@@ -112,7 +122,11 @@ onMounted(() => {
                 <img class="event__img" :src="event.image" :alt="event.name" width="270" height="195">
                 <p class="event__type">{{ event.type }}</p>
                 <h3 class="event__name">{{ event.name }}</h3>
-                <time class="event__date"></time>
+                <time class="event__date">
+                    <span v-if="!isEventActive">закроется</span>
+                    <span v-else>откроется</span>
+                    {{ isEventActive ? event.start_date.split('T')[1].slice(0,  5) : event.end_date.split('T')[1].slice(0,  5) }}
+                </time>
             </div>
         </div>
     </section>
