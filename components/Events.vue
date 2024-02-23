@@ -7,6 +7,8 @@ const props = defineProps({
 
 const selectedDate = ref(null);
 const selectedType = ref(null);
+const daysInRussian = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+const monthsInRussian = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 
 const allTypes = computed(() => {
     const types = [...new Set(props.events.map(event => event.type))];
@@ -14,23 +16,44 @@ const allTypes = computed(() => {
     return types;
 });
 
+
+
 // диапазон дней события
 const allDays = computed(() => {
     let days = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+
     props.events.forEach(event => {
         const startDate = new Date(event.start_date);
         const endDate = new Date(event.end_date);
+
         while (startDate <= endDate) {
-            // Only add dates that are on or after today
             if (startDate >= today) {
-                days.push(startDate.toISOString().split('T')[0]);
+                // Добавляем только те даты, которые находятся в диапазоне от сегодняшнего дня и дальше
+                // const dayNumber = startDate.getDay();
+                const dayName = daysInRussian[startDate.getDay()];
+                const monthName = monthsInRussian[startDate.getMonth()]; // Получение названия месяца
+                // Проверяем, является ли день первым числом месяца
+                const isFirstDayOfMonth = startDate.getDate() ===  1;
+
+                days.push({
+                    date: startDate.toISOString().split('T')[0],
+                    number: startDate.getDate(),
+                    name: dayName,
+                    month: isFirstDayOfMonth ? monthName : null
+                });
+
             }
             startDate.setDate(startDate.getDate() + 1);
         }
     });
-    return [...new Set(days)]; // Remove duplicates
+
+    // Удаляем дубликаты, используя Set и map для сохранения только уникальных элементов
+    return Array.from(new Set(days.map(day => day.date))).map(date => {
+        const day = days.find(d => d.date === date);
+        return { date, number: day.number, name: day.name, month: day.month };
+    });
 });
 
 // Computed property to filter events by the selected date and type
@@ -72,16 +95,13 @@ onMounted(() => {
     <section class="events-block">
         <h2 class="title">Афиша событий на</h2>
 
-        <!-- <button @click="filterByType('All')" :class="{ active: selectedType === 'All' }">
-            Все
-        </button> -->
         <button v-for="(type, i) in allTypes" :key="i" @click="filterByType(type)"
             :class="{ active: selectedType === type }">
             {{ type }}
         </button>
 
-        <div v-for="day in allDays" :key="day" @click="filterByDate(day)">
-            {{ day }}
+        <div v-for="day in allDays" :key="day.date" @click="filterByDate(day.date)">
+            {{ day.number }} {{ day.name }} {{ day.month }}
         </div>
 
         <div class="events">
