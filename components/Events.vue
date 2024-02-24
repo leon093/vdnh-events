@@ -12,7 +12,7 @@ const monthsInRussian = ['Январь', 'Февраль', 'Март', 'Апре
 const monthEndings = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
 const selectedDay = computed(() => {
-    if(!selectedDate.value) return
+    if (!selectedDate.value) return
     const selectedDateTitle = new Date(selectedDate.value);
     const day = selectedDateTitle?.getDate();
     const month = selectedDateTitle?.getMonth(); // месяцы начинаются с  0
@@ -105,7 +105,6 @@ const isEventActive = computed(() => {
 });
 
 
-
 // При монтировании компонента устанавливаем выбранную дату на текущий день
 onMounted(() => {
     // const today = new Date();
@@ -116,16 +115,27 @@ onMounted(() => {
 <template>
     <section class="events-block">
         <h2 class="title">
-            Афиша событий <span v-if="selectedDay">на {{ selectedDay }}</span>
+            Афиша событий
+            <template v-if="selectedDay">на <span class="title__selected-day"> {{ selectedDay }}</span></template>
         </h2>
 
-        <button v-for="(type, i) in allTypes" :key="i" @click="filterByType(type)"
-            :class="{ active: selectedType === type }">
-            {{ type }}
-        </button>
+        <div class="types">
+            <button v-for="(type, i) in allTypes" :key="i" @click="filterByType(type)"
+                :class="{ active: selectedType === type }" class="types__btn">
+                {{ type }}
+            </button>
+        </div>
 
-        <div v-for="day in allDays" :key="day.date" @click="filterByDate(day.date)">
-            {{ day.number }} {{ day.name }} {{ day.month ? day.month : '' }}
+        <div class="days">
+            <button v-for="day in allDays" :key="day.date" @click="filterByDate(day.date)" class="days__btn">
+
+                <div v-if="day.month" class="days__month">{{ day.month }}</div>
+
+                <div class="days__inner" :class="{ active: selectedDate === day?.date }">
+                    <div class="days__name">{{ day.name }}</div>
+                    <div class="days__day">{{ day.number }}</div>
+                </div>
+            </button>
         </div>
 
         <div class="events">
@@ -136,7 +146,8 @@ onMounted(() => {
                 <time class="event__date">
                     <span v-if="isEventActive">Сегодня до</span>
                     <span v-else>Откроется</span>
-                    {{ isEventActive ? event.end_date.split('T')[1].slice(0,  5) : event.start_date.split('T')[1].slice(0,  5) }}
+                    {{ isEventActive ? event.end_date.split('T')[1].slice(0, 5) : event.start_date.split('T')[1].slice(0, 5)
+                    }}
                 </time>
             </div>
         </div>
@@ -147,6 +158,19 @@ onMounted(() => {
 :root {
     --events-block-bg: #fff;
     --event-bg: #fafafa;
+    --brand-color: #ce1531;
+    --type-active-color: #fff;
+    --type-br: rgba(211, 17, 43, 0.40);
+    --title-color: #414141;
+}
+
+.title {
+    font-size: 35px;
+    color: var(--title-color);
+}
+
+.title__selected-day {
+    color: var(--brand-color);
 }
 
 .events-block {
@@ -186,5 +210,79 @@ onMounted(() => {
 
 .event__date {
     font-size: 11px;
+}
+
+.types {
+    display: flex;
+    gap: 20px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.types__btn {
+    padding: 9px 12px;
+    border: 1px solid var(--type-br);
+    border-radius: 16px;
+}
+
+.types__btn.active {
+    background: var(--brand-color);
+    color: var(--type-active-color);
+}
+
+.days {
+    display: flex;
+    align-items: end;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.days__btn {}
+
+.days__month {
+    color: #85889E;
+    font-size: 14px;
+    text-align: left;
+    margin-bottom: 3px;
+}
+
+.days__inner {
+    background: #f5f5f5;
+    border-radius: 16px;
+    padding: 10px;
+    width: 65px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.days__inner:hover {
+    background: #e9e9e9;
+}
+
+.days__inner.active {
+    background: var(--brand-color);
+
+    .days__name,
+    .days__day {
+        color: var(--type-active-color);
+    }
+
+}
+
+.days__name {
+    text-transform: uppercase;
+    font-size: 10px;
+    line-height: 1;
+    margin-bottom: 8px;
+    color: #05050573;
+}
+
+.days__day {
+    font-size: 18px;
+    line-height: 1;
+    color: #414141;
 }
 </style>
