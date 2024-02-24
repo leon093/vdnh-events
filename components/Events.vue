@@ -123,9 +123,9 @@ onMounted(() => {
                 <p class="event__type">{{ event.type }}</p>
                 <h3 class="event__name">{{ event.name }}</h3>
                 <time class="event__date">
-                    <span v-if="!isEventActive">закроется</span>
+                    <span v-if="isEventActive">закроется</span>
                     <span v-else>откроется</span>
-                    {{ isEventActive ? event.start_date.split('T')[1].slice(0,  5) : event.end_date.split('T')[1].slice(0,  5) }}
+                    {{ isEventActive ? event.end_date.split('T')[1].slice(0,  5) : event.start_date.split('T')[1].slice(0,  5) }}
                 </time>
             </div>
         </div>
