@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref } from 'vue';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
@@ -13,7 +13,7 @@ const selectedType = ref('Все');
 const daysInRussian = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 const monthsInRussian = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 const monthEndings = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-const nav = {nextEl: '.carousel__next', prevEl: '.carousel__prev'}
+const nav = { nextEl: '.carousel__next', prevEl: '.carousel__prev' }
 
 const selectedDay = computed(() => {
     if (!selectedDate.value) return
@@ -99,21 +99,22 @@ const filterByType = (type) => {
     selectedType.value = type;
 };
 
-const isEventActive = computed(() => {
+// показывает активность события
+const getEventStatus = (event) => {
     const now = new Date();
-    return props.events.some(event => {
-        const startDate = new Date(event.start_date);
-        const endDate = new Date(event.end_date);
-        return now >= startDate && now <= endDate;
-    });
-});
+    const endDate = new Date(event.end_date);
 
+    const todayHours = now.getHours();
+    const todayMinutes = now.getMinutes();
+    const endHours = endDate.getHours();
+    const endMinutes = endDate.getMinutes();
 
-// При монтировании компонента устанавливаем выбранную дату на текущий день
-onMounted(() => {
-    // const today = new Date();
-    // selectedDate.value = today.toISOString().split('T')[0];
-});
+    if(todayHours >= endHours && todayMinutes >= endMinutes) {
+        return `Завтра в ${event.start_date.split('T')[1].slice(0, 5)}`
+    } else {
+        return `Открыто до ${event.end_date.split('T')[1].slice(0, 5)}`
+    }
+};
 </script>
 
 <template>
@@ -132,7 +133,7 @@ onMounted(() => {
 
         <div class="carousel">
             <div class="carousel__prev"></div>
-            <Swiper slidesPerView="15" :navigation="nav" :modules="[Navigation]"  class="days">
+            <Swiper slidesPerView="15" :navigation="nav" :modules="[Navigation]" class="days">
                 <SwiperSlide v-for="day in allDays" :key="day.date" @click="filterByDate(day.date)" class="days__btn">
                     <div v-if="day.month" class="days__month">{{ day.month }}</div>
 
@@ -151,9 +152,7 @@ onMounted(() => {
                 <p class="event__type">{{ event.type }}</p>
                 <h3 class="event__name">{{ event.name }}</h3>
                 <time class="event__date">
-                    <span v-if="isEventActive">Сегодня до</span>
-                    <span v-else>Откроется</span>
-                    {{ isEventActive ? event.end_date.split('T')[1].slice(0, 5) : event.start_date.split('T')[1].slice(0, 5)}}
+                    {{ getEventStatus(event) }}
                 </time>
             </div>
         </div>
@@ -294,7 +293,6 @@ onMounted(() => {
 .carousel {
     display: flex;
 }
-
 
 .carousel__prev,
 .carousel__next {

@@ -1,5 +1,5 @@
 <script setup>
-const { data: events } = await useFetch('https://run.mocky.io/v3/f8255df2-70e5-449c-a58e-eb041c899e17');
+const { data: events } = await useFetch('https://run.mocky.io/v3/933c458e-8d39-42b8-a9a9-b5d5d93365b6');
 </script>
 
 <template>
