@@ -101,6 +101,7 @@ const filteredEvents = computed(() => {
             }
             startDate.setDate(startDate.getDate() + 1);
         }
+
         return (!selectedType.value || event.type === selectedType.value || selectedType.value === "Все") &&
             (!selectedDate.value || eventDates.includes(selectedDate.value));
     });

@@ -5,7 +5,7 @@ const { data: events } = await useFetch('https://run.mocky.io/v3/933c458e-8d39-4
 <template>
     <header class="header">
         <div class="container">
-            <a class="logo" href="/">
+            <a class="logo animation" href="/">
                 <img src="https://vdnh.ru/local/templates/russia_forum/img/vdnh-logo.svg" alt="ВДНХ">
                 <img src="https://vdnh.ru/local/templates/russia_forum/img/RussiaLogo.svg" alt="Россия">
             </a>
