@@ -15,6 +15,7 @@ const monthsInRussian = ['Январь', 'Февраль', 'Март', 'Апре
 const monthEndings = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 const nav = { nextEl: '.carousel__next', prevEl: '.carousel__prev' }
 
+// показываем выбранный день в заголовке
 const selectedDay = computed(() => {
     if (!selectedDate.value) return
     const selectedDateTitle = new Date(selectedDate.value);
@@ -25,9 +26,10 @@ const selectedDay = computed(() => {
     return `${day} ${monthEnding}`
 })
 
+// типы событий
 const allTypes = computed(() => {
     const types = [...new Set(props.events.map(event => event.type))];
-    types.unshift("Все"); // Add "All" as the first option
+    types.unshift("Все");
     return types;
 });
 
@@ -72,7 +74,7 @@ const allDays = computed(() => {
     });
 });
 
-// Computed property to filter events by the selected date and type
+// Фильтруем события по выбранной дате и типу, а также не показываем событие если у него стоит выходной в какой-то определённый день
 const filteredEvents = computed(() => {
     return props.events.filter(event => {
         const startDate = new Date(event.start_date);
@@ -91,15 +93,10 @@ const filteredEvents = computed(() => {
     });
 });
 
-const filterByDate = (date) => {
-    selectedDate.value = date;
-};
+const filterByDate = (date) => selectedDate.value = date;
+const filterByType = (type) => selectedType.value = type;
 
-const filterByType = (type) => {
-    selectedType.value = type;
-};
-
-// показывает активность события
+// показывает режим работы события за день
 const getEventStatus = (event) => {
     const now = new Date();
     const endDate = new Date(event.end_date);
