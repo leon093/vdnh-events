@@ -1,5 +1,8 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue';
+import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
 
 const props = defineProps({
     events: Array
@@ -10,6 +13,7 @@ const selectedType = ref('Все');
 const daysInRussian = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 const monthsInRussian = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 const monthEndings = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const nav = {nextEl: '.carousel__next', prevEl: '.carousel__prev'}
 
 const selectedDay = computed(() => {
     if (!selectedDate.value) return
@@ -126,16 +130,19 @@ onMounted(() => {
             </button>
         </div>
 
-        <div class="days">
-            <button v-for="day in allDays" :key="day.date" @click="filterByDate(day.date)" class="days__btn">
+        <div class="carousel">
+            <div class="carousel__prev"></div>
+            <Swiper slidesPerView="15" :navigation="nav" :modules="[Navigation]"  class="days">
+                <SwiperSlide v-for="day in allDays" :key="day.date" @click="filterByDate(day.date)" class="days__btn">
+                    <div v-if="day.month" class="days__month">{{ day.month }}</div>
 
-                <div v-if="day.month" class="days__month">{{ day.month }}</div>
-
-                <div class="days__inner" :class="{ active: selectedDate === day?.date }">
-                    <div class="days__name">{{ day.name }}</div>
-                    <div class="days__day">{{ day.number }}</div>
-                </div>
-            </button>
+                    <div class="days__inner" :class="{ active: selectedDate === day?.date }">
+                        <div class="days__name">{{ day.name }}</div>
+                        <div class="days__day">{{ day.number }}</div>
+                    </div>
+                </SwiperSlide>
+            </Swiper>
+            <div class="carousel__next"></div>
         </div>
 
         <div class="events">
@@ -146,8 +153,7 @@ onMounted(() => {
                 <time class="event__date">
                     <span v-if="isEventActive">Сегодня до</span>
                     <span v-else>Откроется</span>
-                    {{ isEventActive ? event.end_date.split('T')[1].slice(0, 5) : event.start_date.split('T')[1].slice(0, 5)
-                    }}
+                    {{ isEventActive ? event.end_date.split('T')[1].slice(0, 5) : event.start_date.split('T')[1].slice(0, 5)}}
                 </time>
             </div>
         </div>
@@ -254,6 +260,7 @@ onMounted(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .days__inner:hover {
@@ -282,5 +289,18 @@ onMounted(() => {
     font-size: 18px;
     line-height: 1;
     color: #414141;
+}
+
+.carousel {
+    display: flex;
+}
+
+
+.carousel__prev,
+.carousel__next {
+    width: 25px;
+    height: 25px;
+    background: #ddd;
+    flex: 0 0 auto;
 }
 </style>
