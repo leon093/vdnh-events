@@ -232,12 +232,10 @@ onMounted(() => {
 
 .days {
     display: flex;
-    align-items: end;
+    align-items: flex-end;
     gap: 20px;
     margin-bottom: 25px;
 }
-
-.days__btn {}
 
 .days__month {
     color: #85889E;
