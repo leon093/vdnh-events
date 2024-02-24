@@ -9,14 +9,23 @@ const selectedDate = ref(null);
 const selectedType = ref(null);
 const daysInRussian = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 const monthsInRussian = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+const monthEndings = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+
+const selectedDay = computed(() => {
+    if(!selectedDate.value) return
+    const selectedDateTitle = new Date(selectedDate.value);
+    const day = selectedDateTitle?.getDate();
+    const month = selectedDateTitle?.getMonth(); // месяцы начинаются с  0
+    const monthEnding = monthEndings[month];
+
+    return `${day} ${monthEnding}`
+})
 
 const allTypes = computed(() => {
     const types = [...new Set(props.events.map(event => event.type))];
     types.unshift("Все"); // Add "All" as the first option
     return types;
 });
-
-
 
 // диапазон дней события
 const allDays = computed(() => {
@@ -99,14 +108,16 @@ const isEventActive = computed(() => {
 
 // При монтировании компонента устанавливаем выбранную дату на текущий день
 onMounted(() => {
-    const today = new Date();
-    selectedDate.value = today.toISOString().split('T')[0];
+    // const today = new Date();
+    // selectedDate.value = today.toISOString().split('T')[0];
 });
 </script>
 
 <template>
     <section class="events-block">
-        <h2 class="title">Афиша событий на</h2>
+        <h2 class="title">
+            Афиша событий <span v-if="selectedDay">на {{ selectedDay }}</span>
+        </h2>
 
         <button v-for="(type, i) in allTypes" :key="i" @click="filterByType(type)"
             :class="{ active: selectedType === type }">
@@ -123,8 +134,8 @@ onMounted(() => {
                 <p class="event__type">{{ event.type }}</p>
                 <h3 class="event__name">{{ event.name }}</h3>
                 <time class="event__date">
-                    <span v-if="isEventActive">закроется</span>
-                    <span v-else>откроется</span>
+                    <span v-if="isEventActive">Сегодня до</span>
+                    <span v-else>Откроется</span>
                     {{ isEventActive ? event.end_date.split('T')[1].slice(0,  5) : event.start_date.split('T')[1].slice(0,  5) }}
                 </time>
             </div>
