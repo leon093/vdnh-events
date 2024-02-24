@@ -1,7 +1,9 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref  } from 'vue';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import NextSvg from '~/assets/images/next.svg?component';
+import PrevSvg from '~/assets/images/prev.svg?component';
 import 'swiper/css';
 
 const props = defineProps({
@@ -128,8 +130,11 @@ const getEventStatus = (event) => {
         </div>
 
         <div class="carousel">
-            <div class="carousel__prev"></div>
-            <Swiper slidesPerView="15" :navigation="nav" :modules="[Navigation]" class="days">
+
+
+            <PrevSvg class="carousel__prev" />
+
+            <Swiper slidesPerView="15" :space-between="15" :navigation="nav" :modules="[Navigation]" class="days">
                 <SwiperSlide v-for="day in allDays" :key="day.date" @click="filterByDate(day.date)" class="days__btn">
                     <div v-if="day.month" class="days__month">{{ day.month }}</div>
 
@@ -139,7 +144,9 @@ const getEventStatus = (event) => {
                     </div>
                 </SwiperSlide>
             </Swiper>
-            <div class="carousel__next"></div>
+
+            <NextSvg class="carousel__next"  />
+
         </div>
 
         <div class="events">
