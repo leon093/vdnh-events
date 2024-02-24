@@ -1,0 +1,39 @@
+@media (max-width: 1300px) {
+    .event {
+        flex-basis: 31%;
+    }
+}
+
+@media (max-width: 968px) {
+    .types {
+        gap: 10px;
+    }
+
+    .events {
+        gap: 20px;
+    }
+
+    .event {
+        flex-basis: 48%;
+        flex-grow: 1;
+    }
+}
+
+@media (max-width: 667px) {
+    .container {
+        padding-left: 10px;
+        padding-left: 10px;
+    }
+
+    .title {
+        font-size: 26px;
+    }
+
+    .events-block {
+        padding: 20px 10px;
+    }
+
+    .types {
+        font-size: 14px;
+    }
+}

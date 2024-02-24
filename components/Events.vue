@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref  } from 'vue';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Mousewheel } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import NextSvg from '~/assets/images/next.svg?component';
 import PrevSvg from '~/assets/images/prev.svg?component';
@@ -15,7 +15,18 @@ const selectedType = ref('Все');
 const daysInRussian = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 const monthsInRussian = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 const monthEndings = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-const nav = { nextEl: '.carousel__next', prevEl: '.carousel__prev' }
+const nav = { nextEl: '.carousel__next', prevEl: '.carousel__prev' };
+const breakpoints = {
+    '650': {
+        slidesPerView: 5
+    },
+    '850': {
+        slidesPerView: 10
+    },
+    '1300': {
+        slidesPerView: 15
+    }
+}
 
 // показываем выбранный день в заголовке
 const selectedDay = computed(() => {
@@ -130,11 +141,16 @@ const getEventStatus = (event) => {
         </div>
 
         <div class="carousel">
-
-
             <PrevSvg class="carousel__prev" />
 
-            <Swiper slidesPerView="15" :space-between="15" :navigation="nav" :modules="[Navigation]" class="days">
+            <Swiper slidesPerView="3"
+                :space-between="10"
+                :navigation="nav"
+                :mousewheel="true"
+                :modules="[Navigation, Mousewheel]"
+                :breakpoints="breakpoints"
+                class="days">
+
                 <SwiperSlide v-for="day in allDays" :key="day.date" @click="filterByDate(day.date)" class="days__btn">
                     <div v-if="day.month" class="days__month">{{ day.month }}</div>
 
@@ -146,7 +162,6 @@ const getEventStatus = (event) => {
             </Swiper>
 
             <NextSvg class="carousel__next"  />
-
         </div>
 
         <div class="events">
