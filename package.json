@@ -15,6 +15,7 @@
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
-    "swiper": "^11.0.6"
+    "swiper": "^11.0.6",
+    "vite-svg-loader": "^5.1.0"
   }
 }
