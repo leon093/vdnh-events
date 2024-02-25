@@ -102,10 +102,5 @@ const filterByDate = (date) => selectedDate.value = date;
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
-  transform: translateX(30px);
-}
-
-.list-leave-active {
-  position: absolute;
 }
 </style>
