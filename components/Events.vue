@@ -79,7 +79,7 @@ const filterByDate = (date) => selectedDate.value = date;
             @filter-by-date="filterByDate"
         />
 
-        <div class="events">
+        <transition-group name="list" tag="div" class="events">
             <div class="event" v-for="event in filteredEvents" :key="event.id">
                 <img class="event__img" :src="event.image" :alt="event.name" width="270" height="195">
                 <p class="event__type">{{ event.type }}</p>
@@ -88,6 +88,24 @@ const filterByDate = (date) => selectedDate.value = date;
                     {{ getEventStatus(event) }}
                 </time>
             </div>
-        </div>
+        </transition-group>
     </section>
 </template>
+
+<style>
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.list-leave-active {
+  position: absolute;
+}
+</style>
