@@ -1,5 +1,6 @@
 :root {
     --body-bg: #f7f7fc;
+    --btn-color: #000;
     --page-ind: 20px;
     --not-found-color: #777;
     --copy-bg: #fff;
@@ -29,6 +30,8 @@ button {
     border: none;
     cursor: pointer;
     padding: 0;
+    color: var(--btn-color);
+    appearance: none;
 }
 
 #__nuxt {
