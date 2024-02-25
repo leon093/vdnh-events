@@ -1,75 +1,29 @@
-# Nuxt 3 Minimal Starter
+# Тестовое задание vdnh-events (Календарь событий с фильтрами.)
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Тестового задание выполнено с помощью фреймворка [Nuxt 3](https://nuxt.com/).
+Менеджер пакетов используется - [Yarn](https://yarnpkg.com/)
 
-## Setup
+Клонируем проект к себе на компьютер или скачиваем zip-архивом. `https://github.com/leon093/vdnh.git`
 
-Make sure to install the dependencies:
+## Установка
+Заходим в папку проекта и устанавливаем зависимости.
 
-```bash
-# npm
-npm install
+`yarn`
 
-# pnpm
-pnpm install
+## Запускаем проект в режиме разработки
+`yarn dev --host`
 
-# yarn
-yarn install
+Дальше переходим по ссылкам в консоле.
 
-# bun
-bun install
-```
+## Запустить проект в режиме продакшена
+Есть несколько путей, чтобы это сделать, лучше всего прочитать на [официальном сайте](https://nuxt.com/docs/getting-started/deployment) доку как это делать, зависит от того на каком сервере будет разворачиваться проект.
 
-## Development Server
+## Структура файлов
+- Папка **assets** (хранит в себе изображения и стили проекта на нативном css, препроцессоры не использовал, так как css стилей не так много)
+- Папка **components** (компоненты проекта).
+- **app.vue** - точка входа проекта. Там подключается единственный компонент **Events.vue**, который отвечается за блок событий. Там вся логика и вёрстка. В файле **app.vue** делается запрос по урлу (https://run.mocky.io/v3/933c458e-8d39-42b8-a9a9-b5d5d93365b6) на тестовый сервер, приходят данные (события) в формате json. И передаются вниз пропсами в компонент **Events.vue**. 
+- **nuxt.config.ts** - настройки проекта
 
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## В package.json используются зависимости
+- [swiper](https://swiperjs.com/vue) - используется карусель фильтр дней событий
+- [vite-svg-loader](https://www.npmjs.com/package/vite-svg-loader) - для загрузки svg изображений как компонентов. 
